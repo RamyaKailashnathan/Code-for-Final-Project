@@ -1,0 +1,206 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FinalProjectforGF2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        
+        {
+           
+            string phone, navn, address, postnr, by, email, skrivtofile = "", ans = "", sog = "", tast = "";
+            bool phone_godkent, phone_fundet;
+            int i = 0, count = 0, temp = 0, all_count = 0,ikke_fundet=0;
+            // Skift denne skræm color til hvid
+            // Skift denne ord color til sort
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            do
+            {
+                Start:
+                Console.Clear();
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.SetCursorPosition(3, 0);
+                Console.WriteLine("<<<<<<<<\t Carsten Mørch Information System - Gæste-registering v1.0\t >>>>>");
+                Console.SetCursorPosition(5, 2);
+                Console.WriteLine(" Telefon nr: ");
+                Console.SetCursorPosition(5, 3);
+                Console.WriteLine(" Navn:");
+                Console.SetCursorPosition(5, 4);
+                Console.WriteLine(" Adresse:");
+                Console.SetCursorPosition(5, 5);
+                Console.WriteLine(" Postnr:");
+                Console.SetCursorPosition(5, 6);
+                Console.WriteLine(" By:");
+                Console.SetCursorPosition(5, 7);
+                Console.WriteLine(" Email:");
+               
+                Console.WriteLine("[O] Opret\t[F] Find\t[V] Vis alle\t [Q] Afslut");
+                Console.Write(" Vælg Funktion: ");
+                tast = Console.ReadLine();
+                tast = tast.ToLower();
+
+                switch (tast)
+                {
+
+                    case "o":
+                        {
+                            do // find the phone
+                            {
+                                phone_godkent = true; phone_fundet = false;
+                                do  // Kontrollerer eksistensen af telefonnummeret i filen
+                                {
+                                    Console.SetCursorPosition(19, 2);
+                                    phone = Console.ReadLine();
+                                    //Kontrollerer længden af det indtastede telefonnummer 
+                                    if (int.TryParse(phone, out _) && phone.Length == 8)
+                                    {
+                                        phone_godkent = true;
+                                    }
+                                    else
+                                    {
+                                        Console.SetCursorPosition(19, 20);
+                                        Console.WriteLine("Telefonnummeret er forkert formatet.Prøv venligst igen.");
+                                        Console.ReadKey();
+                                        goto Start;
+                                    }
+                                } while (!phone_godkent);
+                                 string[] lines = System.IO.File.ReadAllLines(@"C:\Users\ramy0076\OneDrive - TEC\Skrivebord\KundeKartotek.txt");
+                             
+                                foreach (string line in lines) //Kontroller hver linje i datafilen  
+                                {
+                                    if (line.Contains(phone))
+                                    {
+                                        phone_fundet = true;
+
+                                    }
+                                }
+                                if (phone_fundet)
+                                {
+                                    Console.SetCursorPosition(19, 20);
+                                    Console.WriteLine("Telefonnummer er eksisterer.Prøv igen.");
+                                    Console.ReadKey();
+                                    goto Start;
+                                }
+                            } while (phone_fundet);
+
+                            //her starter indtastning af andre oplysninger
+
+                            Console.SetCursorPosition(19, 3);
+                            navn = Console.ReadLine();
+
+
+                            Console.SetCursorPosition(19, 4);
+                            address = Console.ReadLine();
+
+                            Console.SetCursorPosition(19, 5);
+                            postnr = Console.ReadLine();
+
+                            Console.SetCursorPosition(19, 6);
+                            by = Console.ReadLine();
+
+                            do
+                            {
+                                Console.SetCursorPosition(19, 7);
+                                email = Console.ReadLine();
+
+                            } while (!email.Contains("@") || !email.Contains(".")); //Tjek, om e-mailen har @ og  . 
+
+
+                            skrivtofile = phone + "," + navn + "," + address + "," + postnr + "," + by + "," + email;
+                            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\ramy0076\OneDrive - TEC\Skrivebord\KundeKartotek.txt", true))
+                            
+                            {
+                                file.WriteLine(skrivtofile);
+                                count++;
+
+                            }
+                            Console.WriteLine("Oplysninger gemmes .........");
+                            break;
+
+                        }// luk til case 'o'
+                    case "f":
+                        {
+                            Console.Clear();
+                            Console.SetCursorPosition(3, 0);
+                            Console.WriteLine("<<<<<<<<\t Carsten Mørch Information System - Gæste-registering v1.0\t >>>>>");
+                            Console.SetCursorPosition(5, 2);
+                            Console.Write(" Indtast den string, der skal søges i filen :  ");
+                            sog = Console.ReadLine();
+                            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\ramy0076\OneDrive - TEC\Skrivebord\KundeKartotek.txt");
+                         
+                            
+                            foreach (string line in lines)
+                            {
+                               if (line.Contains(sog))
+                                {
+
+                                    Console.Write("   ##     ");
+                                    Console.WriteLine("\t" + line);
+                                    i++;
+                                    ikke_fundet = 1;
+                                }
+                            }
+                            if (ikke_fundet == 0)
+                            {
+                                Console.WriteLine("Ingen registreringer fundet.Tryk enter!");
+                                Console.ReadKey();
+                                
+                            }
+                            Console.ReadKey();
+                            break;
+                        }
+
+                    case "v":
+                        {
+                            Console.Clear();
+                            Console.SetCursorPosition(3, 0);
+                            Console.WriteLine();
+                            Console.WriteLine("<<<<<<<<\t Carsten Mørch Information System - Gæste-registering v1.0\t >>>>>");
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\ramy0076\OneDrive - TEC\Skrivebord\KundeKartotek.txt");
+                            temp = 0; all_count = 0;
+
+                            foreach (string line in lines)
+                            {
+
+                                temp++;
+                                all_count++;
+                                Console.Write("\t" + line);
+                                Console.WriteLine();
+                                if (temp == 16)
+                                {
+                                    temp = 0;
+                                    Console.ReadKey();
+                                    Console.Clear();
+                                }
+                            }
+
+                            Console.WriteLine();
+                            Console.WriteLine("Der er i alt  {0} linier i datafilen", all_count);
+                            Console.WriteLine("Indhold af databasen");
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Console.WriteLine(" Ikke mere at vise   -  Tryk en tast ! ");
+
+                        }
+                        break;
+
+                    case "q":
+                        Console.ReadKey();
+                        break;
+                    default:
+
+                        break;
+                }
+
+                Console.ReadKey();
+            } while (tast != "q");
+        }
+}
